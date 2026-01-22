@@ -119,6 +119,50 @@ from Seat
 order by id;
 
 
+-------------X----------------X--------------------X-------------------
+
+--https://leetcode.com/problems/customers-who-bought-all-products/
+
+--1045. Customers Who Bought All Products
+
+Create table If Not Exists Customer (customer_id int, product_key int);
+Create table Product (product_key int);
+Truncate table Customer;
+insert into Customer (customer_id, product_key) values ('1', '5');
+insert into Customer (customer_id, product_key) values ('2', '6');
+insert into Customer (customer_id, product_key) values ('3', '5');
+insert into Customer (customer_id, product_key) values ('3', '6');
+insert into Customer (customer_id, product_key) values ('1', '6');
+Truncate table Product;
+insert into Product (product_key) values ('5');
+insert into Product (product_key) values ('6');
+
+select customer_id
+from customer 
+group by customer_id 
+having count(distinct product_key) = (select count(distinct product_key) from product);
+ 
+-------------X----------------X--------------------X-------------------
+
+--https://leetcode.com/problems/product-sales-analysis-iii/description/
+
+--1070. Product Sales Analysis III
+
+Create table If Not Exists Sales (sale_id int, product_id int, year int, quantity int, price int);
+Truncate table Sales;
+insert into Sales (sale_id, product_id, year, quantity, price) values ('1', '100', '2008', '10', '5000');
+insert into Sales (sale_id, product_id, year, quantity, price) values ('2', '100', '2009', '12', '5000');
+insert into Sales (sale_id, product_id, year, quantity, price) values ('7', '200', '2011', '15', '9000');
+
+select product_id, year as first_year, quantity, price 
+from (
+select rank() over (partition by product_id order by year) as rn, product_id, year, quantity, price
+from sales) 
+where rn = 1;
+
+
+
+
 
 
 
