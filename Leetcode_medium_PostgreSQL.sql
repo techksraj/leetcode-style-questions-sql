@@ -160,6 +160,90 @@ select rank() over (partition by product_id order by year) as rn, product_id, ye
 from sales) 
 where rn = 1;
 
+-------------X----------------X--------------------X-------------------
+
+--https://leetcode.com/problems/market-analysis-i/description/
+
+--1158. Market Analysis I
+
+Create table If Not Exists Users (user_id int, join_date date, favorite_brand varchar(10));
+Create table If Not Exists Orders (order_id int, order_date date, item_id int, buyer_id int, seller_id int);
+Create table If Not Exists Items (item_id int, item_brand varchar(10));
+Truncate table Users;
+insert into Users (user_id, join_date, favorite_brand) values ('1', '2018-01-01', 'Lenovo');
+insert into Users (user_id, join_date, favorite_brand) values ('2', '2018-02-09', 'Samsung');
+insert into Users (user_id, join_date, favorite_brand) values ('3', '2018-01-19', 'LG');
+insert into Users (user_id, join_date, favorite_brand) values ('4', '2018-05-21', 'HP');
+Truncate table Orders;
+insert into Orders (order_id, order_date, item_id, buyer_id, seller_id) values ('1', '2019-08-01', '4', '1', '2');
+insert into Orders (order_id, order_date, item_id, buyer_id, seller_id) values ('2', '2018-08-02', '2', '1', '3');
+insert into Orders (order_id, order_date, item_id, buyer_id, seller_id) values ('3', '2019-08-03', '3', '2', '3');
+insert into Orders (order_id, order_date, item_id, buyer_id, seller_id) values ('4', '2018-08-04', '1', '4', '2');
+insert into Orders (order_id, order_date, item_id, buyer_id, seller_id) values ('5', '2018-08-04', '1', '3', '4');
+insert into Orders (order_id, order_date, item_id, buyer_id, seller_id) values ('6', '2019-08-05', '2', '2', '4');
+Truncate table Items;
+insert into Items (item_id, item_brand) values ('1', 'Samsung');
+insert into Items (item_id, item_brand) values ('2', 'Lenovo');
+insert into Items (item_id, item_brand) values ('3', 'LG');
+insert into Items (item_id, item_brand) values ('4', 'HP');
+
+
+-------------X----------------X--------------------X-------------------
+
+--https://leetcode.com/problems/product-price-at-a-given-date/description/
+
+--1164. Product Price at a Given Date
+
+Create table If Not Exists Products (product_id int, new_price int, change_date date);
+Truncate table Products;
+insert into Products (product_id, new_price, change_date) values ('1', '20', '2019-08-14');
+insert into Products (product_id, new_price, change_date) values ('2', '50', '2019-08-14');
+insert into Products (product_id, new_price, change_date) values ('1', '30', '2019-08-15');
+insert into Products (product_id, new_price, change_date) values ('1', '35', '2019-08-16');
+insert into Products (product_id, new_price, change_date) values ('2', '65', '2019-08-17');
+insert into Products (product_id, new_price, change_date) values ('3', '20', '2019-08-18');
+
+select product_id, COALESCE((
+select new_price from products pr where pr.product_id = p.product_id and change_date <= '2019-08-16' order by change_date desc limit 1
+), 10) as price
+from products p
+group by product_id;
+
+with latest_rank as (select product_id, new_price, rank() over (partition by product_id order by change_date desc) as latest_rank
+from products
+where change_date<= '2019-08-16')
+select product_id, new_price as price
+from latest_rank
+where latest_rank = 1
+union all
+select distinct product_id, 10 as price
+from products
+where product_id not in (select product_id from latest_rank);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
