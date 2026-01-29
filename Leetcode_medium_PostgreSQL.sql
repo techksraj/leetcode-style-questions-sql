@@ -188,6 +188,14 @@ insert into Items (item_id, item_brand) values ('3', 'LG');
 insert into Items (item_id, item_brand) values ('4', 'HP');
 
 
+select u.user_id as buyer_id, u.join_date, count(o.item_id) as orders_in_2019
+from users u
+left join Orders o on u.user_id = o.buyer_id and to_char(o.order_date, 'YYYY') = '2019'
+group by u.user_id, u.join_date
+order by u.user_id;
+
+
+
 -------------X----------------X--------------------X-------------------
 
 --https://leetcode.com/problems/product-price-at-a-given-date/description/
