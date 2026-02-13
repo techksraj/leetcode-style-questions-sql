@@ -229,10 +229,29 @@ from products
 where product_id not in (select product_id from latest_rank);
 
 
+-------------X----------------X--------------------X-------------------
+
+--https://leetcode.com/problems/last-person-to-fit-in-the-bus/description/
+
+--1204. Last Person to Fit in the Bus
 
 
+Create table If Not Exists Queue (person_id int, person_name varchar(30), weight int, turn int)
+Truncate table Queue
+insert into Queue (person_id, person_name, weight, turn) values ('5', 'Alice', '250', '1')
+insert into Queue (person_id, person_name, weight, turn) values ('4', 'Bob', '175', '5')
+insert into Queue (person_id, person_name, weight, turn) values ('3', 'Alex', '350', '2')
+insert into Queue (person_id, person_name, weight, turn) values ('6', 'John Cena', '400', '3')
+insert into Queue (person_id, person_name, weight, turn) values ('1', 'Winston', '500', '6')
+insert into Queue (person_id, person_name, weight, turn) values ('2', 'Marie', '200', '4')
 
-
+SELECT person_name
+FROM (SELECT person_name, turn,
+    SUM(weight) OVER (ORDER BY turn) AS cum_wei
+    FROM Queue
+) temp 
+WHERE cum_wei <= 1000
+ORDER BY turn DESC LIMIT 1;
 
 
 
